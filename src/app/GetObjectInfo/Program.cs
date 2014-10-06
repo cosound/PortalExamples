@@ -64,22 +64,18 @@ namespace GetObjectInfo
 		private void GetObjects()
 		{
 			var response =_client.Object()
-					.Get(null, _configuration.FolderId, null, false, true, true, false, false, 100, 0)
+					.Get(null, _configuration.FolderId, null, false, true, true, false, false, 10, 0)
 					.Synchronous()
 					.Response;
 
 			if (response.Error != null) //Handling the error manually
-			{
 				throw new Exception("Error getting objects: " + response.Error.Message);
-			}
-			else
-			{
-				Console.WriteLine("Got {0} objects", response.Body.Count);
 
-				foreach (var @object in response.Body.Results)
-				{
-					Console.WriteLine("Object: {0} Number of files: {1} Number of metadata: {2}", @object.GUID, @object.Files == null ? 0 : @object.Files.Count, @object.Metadatas == null ? 0 : @object.Metadatas.Count);
-				}
+			Console.WriteLine("Got {0} objects out of {1}", response.Body.Count, response.Body.TotalCount);
+
+			foreach (var @object in response.Body.Results)
+			{
+				Console.WriteLine("Object: {0} Number of files: {1} Number of metadata: {2}", @object.GUID, @object.Files == null ? 0 : @object.Files.Count, @object.Metadatas == null ? 0 : @object.Metadatas.Count);
 			}
 		}
 	}
