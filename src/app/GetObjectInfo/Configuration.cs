@@ -11,7 +11,9 @@ namespace GetObjectInfo
 			AccessToken = ConfigurationManager.AppSettings["AccessToken"];
 			ObjectTypeId = uint.Parse(ConfigurationManager.AppSettings["ObjectTypeId"]);
 			FolderId = uint.Parse(ConfigurationManager.AppSettings["FolderId"]);
-			MetadataSchemaGuid = Guid.Parse(ConfigurationManager.AppSettings["MetadataSchemaGuid"]); 	
+			MetadataSchemaGuid = Guid.Parse(ConfigurationManager.AppSettings["MetadataSchemaGuid"]);
+
+			if(string.IsNullOrEmpty(AccessToken)) throw new Exception("AccessToken is not set in app config");
 		}
 
 		public Guid MetadataSchemaGuid { get; set; }
