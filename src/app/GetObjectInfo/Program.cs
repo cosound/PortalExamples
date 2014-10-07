@@ -47,16 +47,12 @@ namespace GetObjectInfo
 				ServicePath = _configuration.ServicePath
 			};
 
-			var sessionResponse = _client
-				.Session() //The extension to call
-				.Create() //Creates a new session, Session/Create automatically sets the returned session to be used in futher calls
+			var authKeyResponse = _client
+				.AuthKey() //The extension to call
+				.Login(_configuration.AccessToken) //Authentication methods automatically updates the client instance so it knows it's authenticated, it also creates a session
 				.Synchronous() //Halts the current thread until the call is completed
 				.ThrowError() //Throws an exception if the service call returned an error, this must be after the call is completed ("Synchronous()" insures this)
 				.Response; //Returns the response from the service, this must be after the call is completed ("Synchronous()" insures this)
-			Console.WriteLine("Created session with guid: {0}", sessionResponse.Body.Results[0].Guid);
-
-			var authKeyResponse = _client.AuthKey().Login(_configuration.AccessToken) //Authentication methods automatically updates the client instance so it knows it's authenticated
-				.Synchronous().ThrowError().Response;
 
 			Console.WriteLine("Session authenticated, user guid is: {0}", authKeyResponse.Body.Results[0].UserGuid);
 		}
@@ -75,7 +71,7 @@ namespace GetObjectInfo
 
 			foreach (var @object in response.Body.Results)
 			{
-				Console.WriteLine("Object: {0} Number of files: {1} Number of metadata: {2}", @object.GUID, @object.Files == null ? 0 : @object.Files.Count, @object.Metadatas == null ? 0 : @object.Metadatas.Count);
+				Console.WriteLine("Object: {0} Files: {1} Metadata: {2}", @object.Id, @object.Files == null ? 0 : @object.Files.Count, @object.Metadatas == null ? 0 : @object.Metadatas.Count);
 			}
 		}
 	}
